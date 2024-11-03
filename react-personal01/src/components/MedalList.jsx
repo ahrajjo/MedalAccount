@@ -56,3 +56,4 @@ const MedalList = ({ countries, onDelete }) => {
 };
 
 export default MedalList;
+

@@ -36,44 +36,7 @@ npm create vite@latest
 
 UI 뼈대를 만든다. 이게 자바스크립트랑 가장 다른 점이었는데,
 리액트는 컴포넌트 개념이 있기 때문에 App.jsx에 컴포넌트를 입력해주는 방식이다.
-내가 만든 App.jsx는 일단 이렇다
-```jsx
-import React, { useState } from 'react';
-import './App.css'
-import './components/Header.css'
-import './components/MedalForm.css'
-import './components/Footer.css'
-import './components/MedalList.css'
-import Header from "./components/Header";
-import MedalForm from "./components/MedalForm";
-import MedalList from "./components/MedalList";
-import Footer from "./components/Footer";
 
-const App = () => {
-  const [countries, setCountries] = useState([]);
-
-  const handleDelete = (index) => {
-    setCountries(countries.filter((_, i) => i !== index));
-  };
-
-  return (
-    <>
-      <div className="app-container">
-        <Header />
-        <div className="medal-form">
-          <MedalForm countries={countries} setCountries={setCountries} />
-        </div>
-        <MedalList countries={countries} onDelete={handleDelete} />
-      </div>
-      <div>
-        <Footer />
-      </div>
-    </>
-  );
-};
-
-export default App;
-```
 
 난 최대한 컴포넌트를 잘게 쪼개서 App.jsx에는 많은 함수들이 없기를 바랬어서 이렇게 간단하게 적어줬다 😯
 
@@ -86,39 +49,7 @@ export default App;
 
 이 부분은 내가 input을 리액트로 막 공부하고 나서 만든 부분이라 완전 금방 만들었다(ㅎㅎ)
 내 코드들을 조금 쪼개서 보자면 먼저 통합 이벤트와 객체 방식으로 state를 모아둔 것❗
-```jsx
-import { useState } from "react";
 
-//입력 받아야 할 것
-//1.국가명
-//2.금은동 메달 개수
-
-const MedalInputForm = ({ countries, setCountries }) => {
-  const [input, setInput] = useState({
-    country: "",
-    gold: "",
-    silver: "",
-    bronze: "",
-  });
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "country") {
-      setInput({
-        ...input,
-        [name]: value,
-      });
-    } else {
-      const numValue = parseInt(value);
-      if (value === "" || (numValue >= 0 && numValue <= 99)) {
-        setInput({
-          ...input,
-          [name]: value,
-        });
-      }
-    }
-  };
-  ```
   가장 먼저 useState를 사용해주기 위해 import해주고,
   바로 아래 내가 입력 받아야 할 목록을 주석으로 조금 정리해 두었다.
   
@@ -136,67 +67,8 @@ const MedalInputForm = ({ countries, setCountries }) => {
   ➡️ 나머지값은 변동하지않게 해주었다.
   
   
-  다음은 input되는 부분인데,
-  ```jsx
-return (
-    <form action="submit" className="MedalInputForm">
-      <div>
-        <p>국가명</p>
-        <input 
-        name="country" 
-        value={input.country} 
-        onChange={onChange} 
-        />
-      </div>
+다음은 input되는 부분인데,
 
-      <div>
-        <p>금메달</p>
-        <input
-          name="gold"
-          type="number"
-          value={input.gold}
-          onChange={onChange}
-          placeholder="0~99까지 정수 입력"
-        />
-      </div>
-
-      <div>
-        <p>은메달</p>
-        <input
-          name="silver"
-          type="number"
-          value={input.silver}
-          onChange={onChange}
-          placeholder="0~99까지 정수 입력"
-        />
-      </div>
-
-      <div>
-        <p>동메달</p>
-        <input
-          name="bronze"
-          type="number"
-          value={input.bronze}
-          onChange={onChange}
-          placeholder="0~99까지 정수 입력"
-        />
-      </div>
-
-      <div className="btn-container">
-        <button className="buttons" onClick={onAddCountry}>
-          국가 추가
-        </button>
-
-        <button className="buttons" onClick={onUpdate}>
-          업데이트
-        </button>
-      </div>
-    </form>
-  );
-};
-
-export default MedalInputForm;
-```
 위에서부터 아래로 나라 메달 추가버튼과 업데이트 버튼으로 나열되어 있다.
 value값과 name값도 맞춰서 넣어줬고, 숫자를 적는 부분에는 저렇게 명시까지 해주었다.
 사용하는 onChange도 각자 다 맞춰 넣어줬다.
@@ -214,28 +86,7 @@ value값과 name값도 맞춰서 넣어줬고, 숫자를 적는 부분에는 저
     
 여기에서 가장 중요한 button 😣
 여기가 아무래도 함수를 넣어줘야 하다보니까 등장한다. state와 props ❗❗❗
-```jsx
-   /* 국가 추가 누르면 나라와 메달 개수 추가 함수 */
-  }
-  const onAddCountry = (e) => {
-    e.preventDefault();
-    if (input.country && input.gold && input.silver && input.bronze) {
-     
-      const exists = countries.some(
-        (country) => country.country === input.country
-      );
-      if (exists) {
-        alert("이미 존재하는 국가입니다. 업데이트를 해주세요 : )");
-        return;
-      }
 
-      setCountries([...countries, { ...input }]);
-      setInput({ country: "", gold: "", silver: "", bronze: "" });
-    } else {
-      alert("모두 입력해주셔야 추가가 가능합니다 : )");
-    }
-  };
-```
 국가 추가 부터 보자면, 
 ➡️ `  if (input.country && input.gold && input.silver && input.bronze)`하나라도 빈 칸이 있으면 안되게끔 조건을 걸어 주었고,
 ➡️ 중복되는 국가가 있는지 체크 해주었다.
@@ -253,21 +104,6 @@ value값과 name값도 맞춰서 넣어줬고, 숫자를 적는 부분에는 저
     - 입력한 나라 이름을 기반으로 리스트에서 해당 국가를 찾아 수정합니다.
     
 
-```jsx
-const updatedCountries = [...countries];
-
-    updatedCountries[countryIndex] = {
-      ...updatedCountries[countryIndex],
-      gold: input.gold || updatedCountries[countryIndex].gold,
-      silver: input.silver || updatedCountries[countryIndex].silver,
-      bronze: input.bronze || updatedCountries[countryIndex].bronze,
-    };
-
-    setCountries(updatedCountries);
-    alert("국가 정보가 업데이트되었습니다 : )");
-    setInput({ country: "", gold: "", silver: "", bronze: "" });
-  };
-```
 이 부분은 더 간단하게 리펙토링 할 예정이지만 일단 올린다 😊
 기존 나라들을 얕은 복사라고 해야할까? 넣어주고,
 **새롭게 들어가는 나라들이 있으면 넣어주고 없으면 둬 ! 해주고 싶어서 OR연산자를 사용해주었다 (||)**
@@ -281,78 +117,8 @@ const updatedCountries = [...countries];
 - 국가 리스트 데이터를 저장할 `useState`를 추가하고, `map` 메서드를 사용해 리스트에 데이터를 반복 출력합니다.
 - 금메달 수를 기준으로 내림차순 정렬하여 상위 국가부터 표시되도록 합니다.
 
-_아 이부분 할 때 표를 너무 오랜만에 만들어봐서 다시 책 폈다.
-표를 어떻게 그리더라 하면서 (ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ)_
-```jsx
-import React from "react";
 
-const MedalList = ({ countries, onDelete }) => {
-  const sortedCountries = [...countries].sort((a, b) => {
-    const totalA = Number(a.gold);
-    const totalB = Number(b.gold);
-    return totalB - totalA;
-  });
-
-  return (
-    <div className="medal-list-container">
-      <table className="list-table">
-        <thead>
-          <tr>
-            <th>국가명</th>
-            <th>금메달</th>
-            <th>은메달</th>
-            <th>동메달</th>
-            <th>합계</th>
-            <th>액션</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedCountries.map((country, index) => {
-            const totalMedals =
-              Number(country.gold) +
-              Number(country.silver) +
-              Number(country.bronze);
-
-            return (
-              <tr key={index}>
-                <td>{country.country}</td>
-                <td>{country.gold}</td>
-                <td>{country.silver}</td>
-                <td>{country.bronze}</td>
-                <td>{totalMedals}</td>
-                <td>
-                  <button
-                    onClick={() => onDelete(index)}
-                    className="delete-btn"
-                  >
-                    삭제
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      {countries.length === 0 && (
-        <p className="empty-country">등록된 국가가 없습니다 : )</p>
-      )}
-    </div>
-  );
-};
-
-export default MedalList;
-```
-
-이 부분은 진짜 큰 어려움은 없었다. 나는 매달의 총 합계까지 만들어 주었다.
-
-➡️ `const sortedCountries = [...countries].sort((a, b) => {
-    const totalA = Number(a.gold);
-    const totalB = Number(b.gold);
-    return totalB - totalA;
-  });`
-  
-  이렇게 금메달의 개수로 내림차순을 주었고 ! 
+금메달의 개수로 내림차순을 주었고 ! 
   
 ➡️ .map을 사용해서 새롭게 정렬 해주는 방법을 선택했다.
 ➡️ 그리고 나라 배열이 비면 등록된 나라가 없다고 적어주기!
@@ -361,15 +127,9 @@ export default MedalList;
 
 - 각 나라 옆에 삭제 버튼을 추가하여, 클릭 시 해당 국가의 메달 집계가 리스트에서 제거되도록 합니다.
 - **구체적인 구현**:
-    - `filter` 메서드를 활용하여 선택된 국가를 제외하고 나머지 국가들로 리스트를 재구성합니다.
+- `filter` 메서드를 활용하여 선택된 국가를 제외하고 나머지 국가들로 리스트를 재구성합니다.
 
-```jsx
-const [countries, setCountries] = useState([]);
 
-  const handleDelete = (index) => {
-    setCountries(countries.filter((_, i) => i !== index));
-  };
-```
 ➡️ 초기값은 빈 배열로 주고
 ➡️ 삭제 하려는 배열의 인덱스를 매개변수로 주었다.
 ➡️ 여기서 _는 사용하지 않는 첫 번째 매개변수

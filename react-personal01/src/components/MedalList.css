@@ -22,13 +22,14 @@ td {
     text-align: center;
     padding: 20px;
     font-weight: 700;
+    margin-bottom: 150px;
 }
 
 .empty-country {
     display: flex;
     justify-content: center;
-    padding: 150px;
     font-weight: 700;
+    margin-bottom: 150px;
 }
 
 .delete-btn {

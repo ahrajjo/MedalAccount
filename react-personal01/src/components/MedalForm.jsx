@@ -83,7 +83,7 @@ const MedalInputForm = ({ countries, setCountries }) => {
   };
 
   return (
-    <form action="submit" className="MedalInputForm">
+    <form onSubmit={onAddCountry} className="MedalInputForm">
       <div>
         <p>국가명</p>
         <input 
