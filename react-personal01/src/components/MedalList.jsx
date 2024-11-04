@@ -21,14 +21,14 @@ const MedalList = ({ countries, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedCountries.map((country, index) => {
+          {sortedCountries.map((country) => {
             const totalMedals =
               Number(country.gold) +
               Number(country.silver) +
               Number(country.bronze);
 
             return (
-              <tr key={index}>
+              <tr key={country.id}>
                 <td>{country.country}</td>
                 <td>{country.gold}</td>
                 <td>{country.silver}</td>
@@ -36,7 +36,7 @@ const MedalList = ({ countries, onDelete }) => {
                 <td>{totalMedals}</td>
                 <td>
                   <button
-                    onClick={() => onDelete(index)}
+                    onClick={() => onDelete(country.id)}
                     className="delete-btn"
                   >
                     삭제

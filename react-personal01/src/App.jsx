@@ -12,8 +12,8 @@ import Footer from "./components/Footer";
 const App = () => {
   const [countries, setCountries] = useState([]);
 
-  const handleDelete = (index) => {
-    setCountries(countries.filter((_, i) => i !== index));
+  const handleDelete = (id) => {
+    setCountries(countries.filter(country => country.id !== id));
   };
 
   return (
@@ -31,5 +31,4 @@ const App = () => {
     </>
   );
 };
-
 export default App;

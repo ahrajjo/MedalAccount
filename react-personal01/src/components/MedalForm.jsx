@@ -35,23 +35,24 @@ const MedalInputForm = ({ countries, setCountries }) => {
   }
   const onAddCountry = (e) => {
     e.preventDefault();
-    if (input.country && input.gold && input.silver && input.bronze) {
-      // 중복 국가 체크
-      const exists = countries.some(
-        (country) => country.country === input.country
-      );
-      if (exists) {
-        alert("이미 존재하는 국가입니다. 업데이트를 해주세요 : )");
-        return;
-      }
-
-      setCountries([...countries, { ...input }]);
-      setInput({ country: "", gold: "", silver: "", bronze: "" });
-    } else {
+    if (!input.country || !input.gold || !input.silver || !input.bronze) {
       alert("모두 입력해주셔야 추가가 가능합니다 : )");
+      return;
     }
+
+    const exists = countries.some(
+      (country) => country.country === input.country
+    );
+    if (exists) {
+      alert("이미 존재하는 국가입니다. 업데이트를 해주세요 : )");
+      return;
+    }
+
+    setCountries([...countries, { ...input, id: Date.now() }]);
+    setInput({ country: "", gold: "", silver: "", bronze: "" });
   };
 
+  
   const onUpdate = (e) => {
     e.preventDefault();
     if (!input.country) {
@@ -70,11 +71,14 @@ const MedalInputForm = ({ countries, setCountries }) => {
 
     const updatedCountries = [...countries];
 
+    const medals = ['gold', 'silver', 'bronze'];
+
     updatedCountries[countryIndex] = {
       ...updatedCountries[countryIndex],
-      gold: input.gold || updatedCountries[countryIndex].gold,
-      silver: input.silver || updatedCountries[countryIndex].silver,
-      bronze: input.bronze || updatedCountries[countryIndex].bronze,
+      ...medals.reduce((acc, medal) => ({
+        ...acc,
+        [medal]: input[medal] || updatedCountries[countryIndex][medal]
+      }), {})
     };
 
     setCountries(updatedCountries);
@@ -127,11 +131,11 @@ const MedalInputForm = ({ countries, setCountries }) => {
       </div>
 
       <div className="btn-container">
-        <button className="buttons" onClick={onAddCountry}>
+        <button type="submit" className="buttons" onClick={onAddCountry}>
           국가 추가
         </button>
 
-        <button className="buttons" onClick={onUpdate}>
+        <button type="button" className="buttons" onClick={onUpdate}>
           업데이트
         </button>
       </div>
